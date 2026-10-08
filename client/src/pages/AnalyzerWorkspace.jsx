@@ -1,4 +1,3 @@
-import "./AnalyzerWorkspace.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import AnalysisCard from "../components/AnalysisCard";
@@ -151,26 +150,27 @@ function AnalyzerWorkspace({ demoMode = false }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      {/* HEADER */}
+      <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto w-full max-w-[1440px] px-5 py-5 sm:px-7 lg:px-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.7)]" />
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
 
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-cyan-300">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">
                   {demoMode
                     ? "Public Demo Mode"
                     : "AI-Powered Resume Review"}
                 </p>
               </div>
 
-              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">
                 AI Resume Analyzer
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
                 {demoMode
                   ? "Analyze your resume instantly without creating an account."
                   : "Get structured feedback, ATS insights, strengths, weaknesses, and actionable improvements."}
@@ -178,13 +178,14 @@ function AnalyzerWorkspace({ demoMode = false }) {
             </div>
 
             <div className="flex flex-wrap gap-2.5">
-              <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2">
+              {/* MODE */}
+              <div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2">
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-400">
                     Mode
                   </p>
 
-                  <p className="mt-0.5 text-xs font-semibold text-slate-200">
+                  <p className="mt-0.5 text-xs font-semibold text-slate-700">
                     {demoMode ? "Demo" : "AI Analysis"}
                   </p>
                 </div>
@@ -194,14 +195,14 @@ function AnalyzerWorkspace({ demoMode = false }) {
                 <>
                   <Link
                     to="/"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
+                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
                     Back Home
                   </Link>
 
                   <Link
                     to="/signup"
-                    className="inline-flex items-center justify-center rounded-xl bg-cyan-400 px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-300"
+                    className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-blue-700"
                   >
                     Create Account
                   </Link>
@@ -210,21 +211,21 @@ function AnalyzerWorkspace({ demoMode = false }) {
                 <>
                   <Link
                     to="/"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
+                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
                     Home
                   </Link>
 
                   <Link
                     to="/history"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
+                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
                     History
                   </Link>
 
                   <button
                     onClick={handleLogout}
-                    className="inline-flex items-center justify-center rounded-xl border border-red-400/15 bg-red-500/[0.08] px-4 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-500/[0.15]"
+                    className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-100"
                   >
                     Logout
                   </button>

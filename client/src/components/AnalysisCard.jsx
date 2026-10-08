@@ -38,7 +38,7 @@ const normalizeArray = (value) => {
    ICONS
    ========================================================= */
 
-const Icon = ({ name, size = 20, strokeWidth = 1.8 }) => {
+const Icon = ({ name, size = 18, strokeWidth = 1.8 }) => {
   const common = {
     width: size,
     height: size,
@@ -48,7 +48,6 @@ const Icon = ({ name, size = 20, strokeWidth = 1.8 }) => {
     strokeWidth,
     strokeLinecap: "round",
     strokeLinejoin: "round",
-    className: "analysis-icon",
   };
 
   switch (name) {
@@ -181,38 +180,36 @@ const Icon = ({ name, size = 20, strokeWidth = 1.8 }) => {
    SCORE CIRCLE
    ========================================================= */
 
-const ScoreCircle = ({ score, label }) => {
+const ScoreCircle = ({ score }) => {
   const value = clamp(score);
-  const circumference = 2 * Math.PI * 46;
+  const circumference = 2 * Math.PI * 43;
   const offset = circumference - (value / 100) * circumference;
   const scoreClass = getScoreClass(value);
 
   return (
     <div className={`score-circle ${scoreClass}`}>
-      <svg className="score-ring" viewBox="0 0 110 110">
+      <svg className="score-ring" viewBox="0 0 100 100">
         <circle
           className="score-ring-bg"
-          cx="55"
-          cy="55"
-          r="46"
+          cx="50"
+          cy="50"
+          r="43"
         />
 
         <circle
           className="score-ring-progress"
-          cx="55"
-          cy="55"
-          r="46"
+          cx="50"
+          cy="50"
+          r="43"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />
       </svg>
 
       <div className="score-circle-content">
-        <span className="score-number">{value}</span>
-        <span className="score-percent">%</span>
+        <strong>{value}</strong>
+        <span>/100</span>
       </div>
-
-      {label && <span className="score-circle-label">{label}</span>}
     </div>
   );
 };
@@ -228,7 +225,7 @@ const SectionScore = ({ name, score, icon }) => {
   return (
     <div className="section-score-card">
       <div className={`section-score-icon ${scoreClass}`}>
-        <Icon name={icon} size={18} />
+        <Icon name={icon} size={16} />
       </div>
 
       <div className="section-score-main">
@@ -256,7 +253,7 @@ const SectionScore = ({ name, score, icon }) => {
 };
 
 /* =========================================================
-   ANALYSIS SECTION
+   SECTION
    ========================================================= */
 
 const AnalysisSection = ({
@@ -270,7 +267,7 @@ const AnalysisSection = ({
     <section className={`analysis-section ${className}`}>
       <div className="analysis-section-header">
         <div className="analysis-section-icon">
-          <Icon name={icon} size={19} />
+          <Icon name={icon} size={17} />
         </div>
 
         <div>
@@ -292,14 +289,16 @@ const AnalysisSection = ({
 };
 
 /* =========================================================
-   KEYWORD PILL
+   KEYWORD
    ========================================================= */
 
-const KeywordPill = ({ children, type = "default" }) => {
+const KeywordPill = ({ children, type }) => {
   return (
     <span className={`keyword-pill ${type}`}>
-      {type === "matched" && <Icon name="check" size={13} />}
-      {type === "missing" && <Icon name="close" size={13} />}
+      <Icon
+        name={type === "matched" ? "check" : "close"}
+        size={12}
+      />
       {children}
     </span>
   );
@@ -310,49 +309,38 @@ const KeywordPill = ({ children, type = "default" }) => {
    ========================================================= */
 
 const ComparisonItem = ({ item, type }) => {
-  if (typeof item === "string") {
-    return (
-      <div className={`comparison-item ${type}`}>
-        <div className="comparison-item-icon">
-          <Icon
-            name={
-              type === "matched"
-                ? "check"
-                : type === "partial"
-                ? "warning"
-                : "close"
-            }
-            size={15}
-          />
-        </div>
+  const name =
+    typeof item === "string"
+      ? item
+      : item?.name ||
+        item?.skill ||
+        item?.title ||
+        "Skill";
 
-        <div className="comparison-item-body">
-          <span className="comparison-item-name">{item}</span>
-        </div>
-      </div>
-    );
-  }
+  const evidence =
+    typeof item === "string"
+      ? ""
+      : item?.evidence ||
+        item?.description ||
+        "";
 
-  const name = item?.name || item?.skill || item?.title || "Skill";
-  const evidence = item?.evidence || item?.description || "";
+  const icon =
+    type === "matched"
+      ? "check"
+      : type === "partial"
+      ? "warning"
+      : "close";
 
   return (
     <div className={`comparison-item ${type}`}>
       <div className="comparison-item-icon">
-        <Icon
-          name={
-            type === "matched"
-              ? "check"
-              : type === "partial"
-              ? "warning"
-              : "close"
-          }
-          size={15}
-        />
+        <Icon name={icon} size={14} />
       </div>
 
       <div className="comparison-item-body">
-        <span className="comparison-item-name">{name}</span>
+        <span className="comparison-item-name">
+          {name}
+        </span>
 
         {evidence && (
           <span className="comparison-item-evidence">
@@ -419,7 +407,7 @@ const JobComparison = ({ comparison }) => {
       <div className="section-heading-row">
         <div>
           <div className="eyebrow">
-            <Icon name="target" size={14} />
+            <Icon name="target" size={13} />
             ROLE MATCH
           </div>
 
@@ -432,9 +420,7 @@ const JobComparison = ({ comparison }) => {
         </div>
 
         <div className="comparison-match-score">
-          <span className="comparison-match-number">
-            {matchPercentage}%
-          </span>
+          <strong>{matchPercentage}%</strong>
           <span>match</span>
         </div>
       </div>
@@ -443,7 +429,7 @@ const JobComparison = ({ comparison }) => {
         <div className="comparison-overview-card">
           <div className="comparison-card-heading">
             <span className="comparison-card-icon positive">
-              <Icon name="check" size={17} />
+              <Icon name="check" size={15} />
             </span>
 
             <div>
@@ -457,9 +443,9 @@ const JobComparison = ({ comparison }) => {
               resumeHighlights.map((item, index) => (
                 <div
                   className="highlight-item"
-                  key={`highlight-${index}`}
+                  key={index}
                 >
-                  <Icon name="check" size={15} />
+                  <Icon name="check" size={13} />
                   <span>{item}</span>
                 </div>
               ))
@@ -474,7 +460,7 @@ const JobComparison = ({ comparison }) => {
         <div className="comparison-overview-card">
           <div className="comparison-card-heading">
             <span className="comparison-card-icon target">
-              <Icon name="target" size={17} />
+              <Icon name="target" size={15} />
             </span>
 
             <div>
@@ -488,7 +474,7 @@ const JobComparison = ({ comparison }) => {
               targetRequirements.map((item, index) => (
                 <div
                   className="requirement-item"
-                  key={`requirement-${index}`}
+                  key={index}
                 >
                   <span className="requirement-dot" />
                   <span>{item}</span>
@@ -510,19 +496,20 @@ const JobComparison = ({ comparison }) => {
               <span className="skill-column-title">
                 Strong matches
               </span>
+
               <span className="skill-column-count">
                 {matchedSkills.length} found
               </span>
             </div>
 
-            <Icon name="check" size={18} />
+            <Icon name="check" size={16} />
           </div>
 
           <div className="comparison-items">
             {matchedSkills.length > 0 ? (
               matchedSkills.map((item, index) => (
                 <ComparisonItem
-                  key={`matched-${index}`}
+                  key={index}
                   item={item}
                   type="matched"
                 />
@@ -541,19 +528,20 @@ const JobComparison = ({ comparison }) => {
               <span className="skill-column-title">
                 Partial matches
               </span>
+
               <span className="skill-column-count">
                 {partialMatches.length} found
               </span>
             </div>
 
-            <Icon name="warning" size={18} />
+            <Icon name="warning" size={16} />
           </div>
 
           <div className="comparison-items">
             {partialMatches.length > 0 ? (
               partialMatches.map((item, index) => (
                 <ComparisonItem
-                  key={`partial-${index}`}
+                  key={index}
                   item={item}
                   type="partial"
                 />
@@ -572,19 +560,20 @@ const JobComparison = ({ comparison }) => {
               <span className="skill-column-title">
                 Missing skills
               </span>
+
               <span className="skill-column-count">
                 {missingSkills.length} found
               </span>
             </div>
 
-            <Icon name="close" size={18} />
+            <Icon name="close" size={16} />
           </div>
 
           <div className="comparison-items">
             {missingSkills.length > 0 ? (
               missingSkills.map((item, index) => (
                 <ComparisonItem
-                  key={`missing-${index}`}
+                  key={index}
                   item={item}
                   type="missing"
                 />
@@ -604,13 +593,13 @@ const JobComparison = ({ comparison }) => {
           {relevantExperience.length > 0 && (
             <div className="relevance-card">
               <div className="relevance-card-header">
-                <Icon name="briefcase" size={18} />
+                <Icon name="briefcase" size={16} />
                 <h3>Relevant experience</h3>
               </div>
 
               <ul>
                 {relevantExperience.map((item, index) => (
-                  <li key={`experience-${index}`}>{item}</li>
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
@@ -619,13 +608,13 @@ const JobComparison = ({ comparison }) => {
           {relevantProjects.length > 0 && (
             <div className="relevance-card">
               <div className="relevance-card-header">
-                <Icon name="project" size={18} />
+                <Icon name="project" size={16} />
                 <h3>Relevant projects</h3>
               </div>
 
               <ul>
                 {relevantProjects.map((item, index) => (
-                  <li key={`project-${index}`}>{item}</li>
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
@@ -637,7 +626,7 @@ const JobComparison = ({ comparison }) => {
         <div className="critical-gaps-card">
           <div className="critical-gaps-header">
             <div className="critical-gaps-icon">
-              <Icon name="warning" size={18} />
+              <Icon name="warning" size={16} />
             </div>
 
             <div>
@@ -653,9 +642,12 @@ const JobComparison = ({ comparison }) => {
             {criticalGaps.map((item, index) => (
               <div
                 className="critical-gap"
-                key={`gap-${index}`}
+                key={index}
               >
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
                 <p>{item}</p>
               </div>
             ))}
@@ -666,7 +658,7 @@ const JobComparison = ({ comparison }) => {
       {recommendations.length > 0 && (
         <div className="comparison-recommendations">
           <div className="comparison-recommendations-header">
-            <Icon name="zap" size={18} />
+            <Icon name="zap" size={16} />
             <h3>What to do next</h3>
           </div>
 
@@ -674,7 +666,7 @@ const JobComparison = ({ comparison }) => {
             {recommendations.map((item, index) => (
               <div
                 className="recommendation-item"
-                key={`recommendation-${index}`}
+                key={index}
               >
                 <span className="recommendation-number">
                   {String(index + 1).padStart(2, "0")}
@@ -682,7 +674,7 @@ const JobComparison = ({ comparison }) => {
 
                 <span>{item}</span>
 
-                <Icon name="arrow" size={16} />
+                <Icon name="arrow" size={14} />
               </div>
             ))}
           </div>
@@ -699,14 +691,14 @@ const JobComparison = ({ comparison }) => {
 const ImprovementPlan = ({ items }) => {
   const plan = normalizeArray(items);
 
-  if (plan.length === 0) return null;
+  if (!plan.length) return null;
 
   return (
     <section className="improvement-section">
       <div className="section-heading-row">
         <div>
           <div className="eyebrow">
-            <Icon name="zap" size={14} />
+            <Icon name="zap" size={13} />
             SCORE OPTIMIZATION
           </div>
 
@@ -744,7 +736,7 @@ const ImprovementPlan = ({ items }) => {
           return (
             <div
               className="improvement-card"
-              key={`improvement-${index}`}
+              key={index}
             >
               <div className="improvement-number">
                 {String(index + 1).padStart(2, "0")}
@@ -761,9 +753,7 @@ const ImprovementPlan = ({ items }) => {
                   </span>
                 </div>
 
-                {description && (
-                  <p>{description}</p>
-                )}
+                {description && <p>{description}</p>}
 
                 <div className="impact-row">
                   <span>Potential score impact</span>
@@ -782,7 +772,7 @@ const ImprovementPlan = ({ items }) => {
               </div>
 
               <div className="improvement-arrow">
-                <Icon name="arrow" size={17} />
+                <Icon name="arrow" size={15} />
               </div>
             </div>
           );
@@ -820,7 +810,6 @@ const AnalysisCard = ({ analysis, result }) => {
     [];
 
   const strengths = normalizeArray(data.strengths);
-
   const weaknesses = normalizeArray(data.weaknesses);
 
   const matchedKeywords = normalizeArray(
@@ -835,9 +824,7 @@ const AnalysisCard = ({ analysis, result }) => {
     data.atsSuggestions
   );
 
-  const suggestions = normalizeArray(
-    data.suggestions
-  );
+  const suggestions = normalizeArray(data.suggestions);
 
   const summary =
     data.summary ||
@@ -859,84 +846,59 @@ const AnalysisCard = ({ analysis, result }) => {
 
   return (
     <div className="analysis-card-wrapper">
+
       {/* =====================================================
-          HERO
+          SCORE OVERVIEW
       ===================================================== */}
 
-      <section className="analysis-hero animate-fade-up">
-        <div className="analysis-hero-copy">
-          <div className="hero-eyebrow">
-            <span className="hero-eyebrow-dot" />
-            AI RESUME ANALYSIS
-          </div>
+      <section className="analysis-overview">
+        <div className="overview-main">
+          <div>
+            <div className="eyebrow">
+              <span className="hero-eyebrow-dot" />
+              RESUME ANALYSIS
+            </div>
 
-          <h1>
-            Your resume,
-            <br />
-            <span className="gradient-text">
-              decoded.
-            </span>
-          </h1>
+            <h1>Resume performance overview</h1>
 
-          <p className="analysis-hero-description">
-            Here&apos;s how your resume performs across ATS
-            compatibility, content quality, and job relevance.
-          </p>
+            <p className="analysis-hero-description">
+              A detailed evaluation of your resume's content,
+              ATS compatibility, and job relevance.
+            </p>
 
-          <div className="analysis-status">
-            <span className="status-dot" />
-
-            <span>
+            <div className="analysis-status">
+              <span className="status-dot" />
               Analysis complete
-            </span>
-
-            <span className="status-divider" />
-
-            <span>
-              Powered by AI
-            </span>
-          </div>
-        </div>
-
-        <div className="hero-score-area">
-          <div className="hero-score-card score-glow">
-            <div className="hero-score-label">
-              RESUME SCORE
-            </div>
-
-            <ScoreCircle
-              score={overallScore}
-              label={getScoreLabel(overallScore)}
-            />
-
-            <div
-              className={`hero-score-status ${getScoreClass(
-                overallScore
-              )}`}
-            >
-              {getScoreLabel(overallScore)}
+              <span className="status-divider" />
+              AI powered
             </div>
           </div>
 
-          <div className="hero-ats-card">
-            <div className="hero-ats-icon">
-              <Icon name="shield" size={18} />
-            </div>
-
+          <div className="overview-score">
             <div>
-              <span>ATS compatibility</span>
+              <span className="hero-score-label">
+                OVERALL SCORE
+              </span>
 
-              <strong>
-                {atsMatchScore}/100
-              </strong>
+              <ScoreCircle score={overallScore} />
             </div>
 
-            <div
-              className={`ats-mini-score ${getScoreClass(
-                atsMatchScore
-              )}`}
-            >
-              {getScoreLabel(atsMatchScore)}
+            <div className="overview-score-info">
+              <strong>
+                {getScoreLabel(overallScore)}
+              </strong>
+
+              <span>
+                Overall resume quality
+              </span>
+
+              <div className="score-inline">
+                <Icon name="shield" size={15} />
+
+                <span>ATS compatibility</span>
+
+                <b>{atsMatchScore}/100</b>
+              </div>
             </div>
           </div>
         </div>
@@ -946,10 +908,10 @@ const AnalysisCard = ({ analysis, result }) => {
           QUICK STATS
       ===================================================== */}
 
-      <section className="quick-stats-grid animate-fade-up">
+      <section className="quick-stats-grid">
         <div className="quick-stat-card">
-          <div className="quick-stat-icon cyan">
-            <Icon name="chart" size={19} />
+          <div className="quick-stat-icon">
+            <Icon name="chart" size={17} />
           </div>
 
           <div>
@@ -959,8 +921,8 @@ const AnalysisCard = ({ analysis, result }) => {
         </div>
 
         <div className="quick-stat-card">
-          <div className="quick-stat-icon violet">
-            <Icon name="shield" size={19} />
+          <div className="quick-stat-icon">
+            <Icon name="shield" size={17} />
           </div>
 
           <div>
@@ -970,8 +932,8 @@ const AnalysisCard = ({ analysis, result }) => {
         </div>
 
         <div className="quick-stat-card">
-          <div className="quick-stat-icon green">
-            <Icon name="check" size={19} />
+          <div className="quick-stat-icon">
+            <Icon name="check" size={17} />
           </div>
 
           <div>
@@ -981,8 +943,8 @@ const AnalysisCard = ({ analysis, result }) => {
         </div>
 
         <div className="quick-stat-card">
-          <div className="quick-stat-icon red">
-            <Icon name="close" size={19} />
+          <div className="quick-stat-icon">
+            <Icon name="close" size={17} />
           </div>
 
           <div>
@@ -993,22 +955,21 @@ const AnalysisCard = ({ analysis, result }) => {
       </section>
 
       {/* =====================================================
-          SECTION SCORES
+          RESUME BREAKDOWN
       ===================================================== */}
 
-      <section className="section-scores-section animate-fade-up">
+      <section className="section-scores-section">
         <div className="section-heading-row">
           <div>
             <div className="eyebrow">
-              <Icon name="chart" size={14} />
+              <Icon name="chart" size={13} />
               RESUME BREAKDOWN
             </div>
 
             <h2>Performance by section</h2>
 
             <p>
-              A detailed look at where your resume is strong
-              and where it needs work.
+              See how each major part of your resume performs.
             </p>
           </div>
         </div>
@@ -1047,7 +1008,7 @@ const AnalysisCard = ({ analysis, result }) => {
       </section>
 
       {/* =====================================================
-          JOB COMPARISON
+          JOB MATCH
       ===================================================== */}
 
       {jobComparison && (
@@ -1060,18 +1021,16 @@ const AnalysisCard = ({ analysis, result }) => {
 
       <AnalysisSection
         title="AI assessment"
-        description="The main takeaway from your resume analysis."
+        description="The main takeaway from the analysis."
         icon="spark"
         className="ai-assessment"
       >
         <div className="ai-assessment-content">
           <div className="ai-assessment-mark">
-            <Icon name="spark" size={22} />
+            <Icon name="spark" size={19} />
           </div>
 
-          <div>
-            <p>{summary}</p>
-          </div>
+          <p>{summary}</p>
         </div>
       </AnalysisSection>
 
@@ -1091,10 +1050,10 @@ const AnalysisCard = ({ analysis, result }) => {
               {strengths.map((item, index) => (
                 <div
                   className="bullet-item"
-                  key={`strength-${index}`}
+                  key={index}
                 >
                   <span className="bullet-icon">
-                    <Icon name="check" size={14} />
+                    <Icon name="check" size={12} />
                   </span>
 
                   <span>{item}</span>
@@ -1119,10 +1078,10 @@ const AnalysisCard = ({ analysis, result }) => {
               {weaknesses.map((item, index) => (
                 <div
                   className="bullet-item"
-                  key={`weakness-${index}`}
+                  key={index}
                 >
                   <span className="bullet-icon">
-                    <Icon name="warning" size={14} />
+                    <Icon name="warning" size={12} />
                   </span>
 
                   <span>{item}</span>
@@ -1145,15 +1104,14 @@ const AnalysisCard = ({ analysis, result }) => {
         <div className="section-heading-row">
           <div>
             <div className="eyebrow">
-              <Icon name="search" size={14} />
+              <Icon name="search" size={13} />
               ATS KEYWORDS
             </div>
 
             <h2>Keyword coverage</h2>
 
             <p>
-              Keywords can heavily influence how ATS systems
-              rank your resume.
+              Keywords that may influence ATS matching.
             </p>
           </div>
         </div>
@@ -1171,16 +1129,14 @@ const AnalysisCard = ({ analysis, result }) => {
                 </strong>
               </div>
 
-              <div className="keyword-card-icon">
-                <Icon name="check" size={18} />
-              </div>
+              <Icon name="check" size={17} />
             </div>
 
             <div className="keyword-pills">
               {matchedKeywords.length > 0 ? (
                 matchedKeywords.map((keyword, index) => (
                   <KeywordPill
-                    key={`matched-keyword-${index}`}
+                    key={index}
                     type="matched"
                   >
                     {keyword}
@@ -1206,16 +1162,14 @@ const AnalysisCard = ({ analysis, result }) => {
                 </strong>
               </div>
 
-              <div className="keyword-card-icon">
-                <Icon name="close" size={18} />
-              </div>
+              <Icon name="close" size={17} />
             </div>
 
             <div className="keyword-pills">
               {missingKeywords.length > 0 ? (
                 missingKeywords.map((keyword, index) => (
                   <KeywordPill
-                    key={`missing-keyword-${index}`}
+                    key={index}
                     type="missing"
                   >
                     {keyword}
@@ -1238,13 +1192,13 @@ const AnalysisCard = ({ analysis, result }) => {
       <ImprovementPlan items={improvementPlan} />
 
       {/* =====================================================
-          ATS SUGGESTIONS
+          ACTIONABLE SUGGESTIONS
       ===================================================== */}
 
       {combinedSuggestions.length > 0 && (
         <AnalysisSection
           title="Actionable suggestions"
-          description="Practical changes you can make before applying."
+          description="Practical changes to make before applying."
           icon="zap"
           className="suggestions-section"
         >
@@ -1252,7 +1206,7 @@ const AnalysisCard = ({ analysis, result }) => {
             {combinedSuggestions.map((item, index) => (
               <div
                 className="suggestion-card"
-                key={`suggestion-${index}`}
+                key={index}
               >
                 <div className="suggestion-number">
                   {String(index + 1).padStart(2, "0")}
@@ -1262,9 +1216,7 @@ const AnalysisCard = ({ analysis, result }) => {
                   <p>{item}</p>
                 </div>
 
-                <div className="suggestion-arrow">
-                  <Icon name="arrow" size={17} />
-                </div>
+                <Icon name="arrow" size={14} />
               </div>
             ))}
           </div>
@@ -1272,22 +1224,18 @@ const AnalysisCard = ({ analysis, result }) => {
       )}
 
       {/* =====================================================
-          FOOTER CTA
+          FOOTER
       ===================================================== */}
 
       <section className="analysis-footer-cta">
-        <div className="footer-cta-glow" />
-
         <div className="footer-cta-icon">
-          <Icon name="spark" size={22} />
+          <Icon name="spark" size={19} />
         </div>
 
         <div className="footer-cta-content">
           <span className="eyebrow">NEXT STEP</span>
 
-          <h2>
-            Turn the feedback into a stronger resume.
-          </h2>
+          <h2>Turn the feedback into a stronger resume.</h2>
 
           <p>
             Focus on the highest-impact improvements first,
