@@ -1,6 +1,8 @@
+import "./AnalyzerWorkspace.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import AnalysisCard from "../components/AnalysisCard";
+import "./AnalyzerWorkspace.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -26,7 +28,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
     const trimmedResumeText = resumeText.trim();
 
     if (!trimmedResumeText && !resumeFile) {
-      setError("Please paste resume or upload PDF.");
+      setError("Please paste your resume or upload a PDF.");
       setAnalysis(null);
       return;
     }
@@ -37,6 +39,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
     try {
       const formData = new FormData();
+
       formData.append("resumeText", trimmedResumeText);
       formData.append("jobDescription", jobDescription.trim());
       formData.append("resumeLabel", resumeLabel.trim());
@@ -60,7 +63,19 @@ function AnalyzerWorkspace({ demoMode = false }) {
         body: formData,
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+
+      let data = {};
+
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          throw new Error(
+            `Server returned an invalid response (${response.status}).`
+          );
+        }
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong.");
@@ -77,6 +92,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
       setSaved(false);
     } catch (err) {
+      console.error("Analyze error:", err);
       setError(err.message || "Failed to analyze resume.");
     } finally {
       setLoading(false);
@@ -107,7 +123,19 @@ function AnalyzerWorkspace({ demoMode = false }) {
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+
+      let data = {};
+
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          throw new Error(
+            `Server returned an invalid response (${response.status}).`
+          );
+        }
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to save analysis.");
@@ -124,44 +152,56 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-white/10 bg-slate-900/90 backdrop-blur">
-        <div className="w-full px-6 py-5 sm:px-8 xl:px-10">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                {demoMode ? "Public Demo Mode" : "AI-Powered Resume Review"}
-              </p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+      <header className="border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
+        <div className="mx-auto w-full max-w-[1440px] px-5 py-5 sm:px-7 lg:px-10">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.7)]" />
+
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-cyan-300">
+                  {demoMode
+                    ? "Public Demo Mode"
+                    : "AI-Powered Resume Review"}
+                </p>
+              </div>
+
+              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">
                 AI Resume Analyzer
               </h1>
-              <p className="mt-2 text-sm leading-6 text-slate-400 sm:text-base">
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
                 {demoMode
-                  ? "Try the analyzer instantly without creating an account. Saving and history are available in full account mode."
-                  : "Structured feedback, clearer strengths and weaknesses, and recruiter-style suggestions."}
+                  ? "Analyze your resume instantly without creating an account."
+                  : "Get structured feedback, ATS insights, strengths, weaknesses, and actionable improvements."}
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  Mode
-                </p>
-                <p className="mt-1 text-sm font-semibold text-white">
-                  {demoMode ? "Demo" : "AI Analysis"}
-                </p>
+            <div className="flex flex-wrap gap-2.5">
+              <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2">
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                    Mode
+                  </p>
+
+                  <p className="mt-0.5 text-xs font-semibold text-slate-200">
+                    {demoMode ? "Demo" : "AI Analysis"}
+                  </p>
+                </div>
               </div>
 
               {demoMode ? (
                 <>
                   <Link
                     to="/"
-                    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
                   >
                     Back Home
                   </Link>
+
                   <Link
                     to="/signup"
-                    className="flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                    className="inline-flex items-center justify-center rounded-xl bg-cyan-400 px-4 py-2 text-xs font-bold text-slate-950 transition hover:bg-cyan-300"
                   >
                     Create Account
                   </Link>
@@ -170,21 +210,21 @@ function AnalyzerWorkspace({ demoMode = false }) {
                 <>
                   <Link
                     to="/"
-                    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
                   >
                     Home
                   </Link>
 
                   <Link
                     to="/history"
-                    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.08]"
                   >
-                    View History
+                    History
                   </Link>
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center justify-center rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                    className="inline-flex items-center justify-center rounded-xl border border-red-400/15 bg-red-500/[0.08] px-4 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-500/[0.15]"
                   >
                     Logout
                   </button>
@@ -195,203 +235,257 @@ function AnalyzerWorkspace({ demoMode = false }) {
         </div>
       </header>
 
-      <main className="w-full px-6 py-6 sm:px-8 xl:px-10">
-        <div className="grid items-start gap-6 2xl:grid-cols-[1.03fr_0.97fr]">
-          <section className="rounded-[28px] border border-slate-300 bg-slate-100 text-slate-900 shadow-2xl 2xl:sticky 2xl:top-6 2xl:h-[calc(100vh-150px)]">
-            <div className="flex h-full flex-col p-5 sm:p-6 xl:p-7">
-              <div className="mb-5 flex-shrink-0">
-                <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-                  <div className="max-w-3xl">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">
-                      Resume Input
-                    </p>
-                    <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
-                      Analyze your resume draft
-                    </h2>
-                    <p className="mt-3 text-base leading-7 text-slate-600">
-                      Paste your resume below to receive structured feedback. You
-                      can also upload a PDF and add a job description for ATS
-                      matching.
-                    </p>
-                  </div>
+      <main className="mx-auto w-full max-w-[1240px] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+        {/* ANALYZER INPUT */}
+        <section className="analyzer-workspace">
+          <div className="analyzer-workspace-header">
+            <div>
+              <p className="analyzer-eyebrow">Resume Input</p>
 
-                  <div className="w-fit rounded-2xl border border-slate-300 bg-white/80 px-4 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                      Current Mode
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-900">
-                      Manual Paste + PDF
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <h2>Build your analysis</h2>
 
-              <div className="min-h-0 flex-1 overflow-y-auto pr-2">
-                <div className="mb-5 grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-[24px] border border-slate-300 bg-white/80 p-4">
-                    <label className="mb-3 block text-sm font-semibold text-slate-800">
-                      Resume Name (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={resumeLabel}
-                      onChange={(e) => setResumeLabel(e.target.value)}
-                      placeholder="Example: SWE Resume v2"
-                      className="w-full rounded-[18px] border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                    />
-                  </div>
-
-                  <div className="rounded-[24px] border border-slate-300 bg-white/80 p-4">
-                    <label className="mb-3 block text-sm font-semibold text-slate-800">
-                      Job Label (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={jobLabel}
-                      onChange={(e) => setJobLabel(e.target.value)}
-                      placeholder="Example: Software Developer Intern"
-                      className="w-full rounded-[18px] border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-[28px] border border-slate-300 bg-white/80 p-4">
-                  <textarea
-                    value={resumeText}
-                    onChange={(e) => setResumeText(e.target.value)}
-                    placeholder="Paste your resume here..."
-                    className="min-h-[220px] w-full resize-none rounded-[22px] border border-slate-300 bg-white px-5 py-5 text-[15px] leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 lg:min-h-[240px]"
-                  />
-                </div>
-
-                <div className="mt-5 rounded-[28px] border border-slate-300 bg-white/80 p-4">
-                  <label className="mb-3 block text-sm font-semibold text-slate-800">
-                    Upload Resume PDF (Optional)
-                  </label>
-
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={(e) => setResumeFile(e.target.files[0] || null)}
-                    className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700"
-                  />
-
-                  {resumeFile && (
-                    <p className="mt-3 text-sm text-slate-500">
-                      Selected file: {resumeFile.name}
-                    </p>
-                  )}
-                </div>
-
-                <div className="mt-5 rounded-[28px] border border-slate-300 bg-white/80 p-4">
-                  <label className="mb-3 block text-sm font-semibold text-slate-800">
-                    Job Description (Optional)
-                  </label>
-
-                  <textarea
-                    value={jobDescription}
-                    onChange={(e) => setJobDescription(e.target.value)}
-                    placeholder="Paste the job description here for ATS matching..."
-                    className="min-h-[130px] w-full resize-none rounded-[22px] border border-slate-300 bg-white px-5 py-5 text-[15px] leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-                  />
-                </div>
-
-                {error && (
-                  <div className="mt-5 rounded-2xl border border-red-300 bg-red-100/70 px-4 py-3 text-sm text-red-700">
-                    {error}
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-4 flex-shrink-0 border-t border-slate-300 pt-4">
-                <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                  <div className="max-w-2xl">
-                    <p className="text-sm font-medium text-slate-800">
-                      Best results come from resumes that include projects,
-                      technical skills, experience, and measurable impact.
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                      Example: technologies used, your contributions, and
-                      quantified outcomes.
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={handleAnalyze}
-                    disabled={loading || (!resumeText.trim() && !resumeFile)}
-                    className="inline-flex min-w-[190px] items-center justify-center rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {loading ? "Analyzing Resume..." : "Analyze Resume"}
-                  </button>
-                </div>
-              </div>
+              <p>
+                Add your resume and optionally provide a target job description
+                to get a more accurate ATS comparison.
+              </p>
             </div>
-          </section>
 
-          <aside className="rounded-[28px] border border-white/10 bg-slate-900 shadow-2xl 2xl:sticky 2xl:top-6 2xl:h-[calc(100vh-150px)]">
-            <div className="flex h-full flex-col p-5 sm:p-6 xl:p-7">
-              <div className="mb-5 flex-shrink-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                  Analysis Result
-                </p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
-                  Resume evaluation output
-                </h2>
-                <p className="mt-3 text-base leading-7 text-slate-400">
-                  Review the generated feedback to understand how your resume is
-                  currently positioned and where it can be improved.
-                </p>
+            <div className="analyzer-header-badge">
+              <span className="analyzer-header-badge-dot" />
+              Manual Paste + PDF
+            </div>
+          </div>
+
+          {/* RESUME NAME + JOB LABEL */}
+          <div className="analyzer-label-grid">
+            <div className="analyzer-field">
+              <label htmlFor="resume-label">Resume Name</label>
+
+              <input
+                id="resume-label"
+                type="text"
+                value={resumeLabel}
+                onChange={(e) => setResumeLabel(e.target.value)}
+                placeholder="Example: SWE Resume v2"
+              />
+            </div>
+
+            <div className="analyzer-field">
+              <label htmlFor="job-label">Job Label</label>
+
+              <input
+                id="job-label"
+                type="text"
+                value={jobLabel}
+                onChange={(e) => setJobLabel(e.target.value)}
+                placeholder="Example: Software Developer"
+              />
+            </div>
+          </div>
+
+          {/* RESUME TEXT */}
+          <div className="analyzer-field analyzer-resume-field">
+            <div className="analyzer-field-heading">
+              <label htmlFor="resume-text">Resume Text</label>
+
+              <span>Paste your resume content</span>
+            </div>
+
+            <textarea
+              id="resume-text"
+              value={resumeText}
+              onChange={(e) => setResumeText(e.target.value)}
+              placeholder="Paste your complete resume here..."
+              className="analyzer-resume-textarea"
+            />
+          </div>
+
+          {/* PDF + JOB DESCRIPTION */}
+          <div className="analyzer-input-grid">
+            <div className="analyzer-field analyzer-upload-field">
+              <div className="analyzer-field-heading">
+                <label htmlFor="resume-file">Resume PDF</label>
+
+                <span>Optional</span>
               </div>
 
-              <div className="min-h-0 flex-1 overflow-y-auto pr-2">
-                <AnalysisCard
-                  analysis={analysis?.analysisResult || null}
-                  loading={loading}
-                />
-              </div>
-
-              {analysis && (
-                <div className="mt-4 flex-shrink-0 border-t border-white/10 pt-4">
-                  {demoMode ? (
-                    <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1 h-2 w-2 rounded-full bg-amber-400" />
-
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-amber-300">
-                            Demo Mode
-                          </p>
-
-                          <p className="mt-1 text-sm leading-6 text-slate-300">
-                            Save, history, and deletion are available in full account mode.
-                            Create an account to unlock the full experience.
-                          </p>
-
-                          <div className="mt-3">
-                            <Link
-                              to="/signup"
-                              className="inline-flex items-center rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-amber-300"
-                            >
-                              Create Account
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleSaveAnalysis}
-                      disabled={saving || saved}
-                      className="w-full rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {saved ? "Saved ✔" : saving ? "Saving..." : "Save Analysis"}
-                    </button>
-                  )}
+              <label htmlFor="resume-file" className="analyzer-upload-box">
+                <div className="analyzer-upload-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  >
+                    <path d="M12 16V4" />
+                    <path d="m7 9 5-5 5 5" />
+                    <path d="M5 20h14" />
+                  </svg>
                 </div>
+
+                <div className="min-w-0">
+                  <p>
+                    {resumeFile
+                      ? resumeFile.name
+                      : "Upload your resume PDF"}
+                  </p>
+
+                  <span>
+                    {resumeFile
+                      ? "PDF selected successfully"
+                      : "Click to browse · PDF only"}
+                  </span>
+                </div>
+              </label>
+
+              <input
+                id="resume-file"
+                type="file"
+                accept=".pdf,application/pdf"
+                onChange={(e) =>
+                  setResumeFile(e.target.files?.[0] || null)
+                }
+                className="hidden"
+              />
+            </div>
+
+            <div className="analyzer-field">
+              <div className="analyzer-field-heading">
+                <label htmlFor="job-description">
+                  Job Description
+                </label>
+
+                <span>Optional · ATS matching</span>
+              </div>
+
+              <textarea
+                id="job-description"
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Paste the target job description here..."
+                className="analyzer-job-textarea"
+              />
+            </div>
+          </div>
+
+          {/* ERROR */}
+          {error && (
+            <div className="analyzer-error">
+              <div className="analyzer-error-icon">!</div>
+
+              <p>{error}</p>
+            </div>
+          )}
+
+          {/* ANALYZE BUTTON */}
+          <div className="analyzer-action-row">
+            <div>
+              <p className="analyzer-action-title">
+                Ready to analyze?
+              </p>
+
+              <p className="analyzer-action-description">
+                {jobDescription.trim()
+                  ? "Your resume will also be compared against the target job description."
+                  : "Add a job description above if you want ATS matching and skill-gap analysis."}
+              </p>
+            </div>
+
+            <button
+              onClick={handleAnalyze}
+              disabled={
+                loading ||
+                (!resumeText.trim() && !resumeFile)
+              }
+              className="analyzer-button"
+            >
+              {loading ? (
+                <>
+                  <span className="analyzer-spinner" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  Analyze Resume
+                  <span className="analyzer-button-arrow">
+                    →
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+        </section>
+
+        {/* RESULTS */}
+        <section className="analyzer-results">
+          <div className="analyzer-results-header">
+            <div>
+              <p className="analyzer-eyebrow">Analysis Result</p>
+
+              <h2>Resume evaluation</h2>
+
+              <p>
+                Review your overall score, section breakdown, ATS insights,
+                skill gaps, and recommended improvements.
+              </p>
+            </div>
+
+            {analysis && (
+              <div className="analyzer-result-status">
+                <span />
+                Analysis complete
+              </div>
+            )}
+          </div>
+
+          <div className="analyzer-results-body">
+            <AnalysisCard
+              analysis={analysis?.analysisResult || null}
+              loading={loading}
+            />
+          </div>
+
+          {/* SAVE */}
+          {analysis && (
+            <div className="analyzer-save-area">
+              {demoMode ? (
+                <div className="analyzer-demo-banner">
+                  <div className="analyzer-demo-dot" />
+
+                  <div>
+                    <p>Demo Mode</p>
+
+                    <span>
+                      Save and history features are available after
+                      creating an account.
+                    </span>
+                  </div>
+
+                  <Link
+                    to="/signup"
+                    className="analyzer-demo-button"
+                  >
+                    Create Account
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  onClick={handleSaveAnalysis}
+                  disabled={saving || saved}
+                  className="analyzer-save-button"
+                >
+                  {saved
+                    ? "Saved ✓"
+                    : saving
+                      ? "Saving..."
+                      : "Save Analysis"}
+                </button>
               )}
             </div>
-          </aside>
-        </div>
+          )}
+        </section>
       </main>
     </div>
   );

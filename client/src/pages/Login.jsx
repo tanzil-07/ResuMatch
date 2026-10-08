@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,12 +12,12 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email.trim() || !password.trim()) {
-      setError("Email and password are required.");
+    if (!email || !password) {
+      setError("Please enter your email and password.");
       return;
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address.");
@@ -30,7 +30,10 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
       const data = await response.json();
@@ -44,78 +47,83 @@ function Login() {
 
       window.location.href = "/dashboard";
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || "Unable to login.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 px-6 py-12 text-white">
-      <div className="mx-auto max-w-md rounded-[28px] border border-white/10 bg-slate-900 p-8 shadow-2xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
-          Login
-        </p>
-        <div className="w-[75vw] md:w-[60vw] mb-6">
-          <Link
-            to="/"
-            className="text-sm text-slate-400 transition hover:text-white"
-          >
+    <div className="auth-page">
+      <div className="auth-glow auth-glow-one" />
+      <div className="auth-glow auth-glow-two" />
+
+      <div className="auth-shell">
+        <div className="auth-card">
+
+          <Link to="/" className="auth-back">
             ← Back to Home
           </Link>
-        </div>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
-          Welcome back
-        </h1>
 
-        <p className="mt-3 text-sm leading-6 text-slate-400">
-          Sign in to access your AI Resume Analyzer dashboard.
-        </p>
-
-        <form onSubmit={handleLogin} className="mt-8 space-y-5">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-300">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-cyan-500"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-300">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-cyan-500"
-              placeholder="Enter your password"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-              {error}
+          <div className="auth-header">
+            <div className="auth-brand">
+              <span className="auth-brand-mark">R</span>
+              <span>
+                Resume<span>AI</span>
+              </span>
             </div>
-          )}
 
-          <button
-            type="submit"
-            className="w-full rounded-2xl bg-cyan-600 px-6 py-3 font-semibold text-white transition hover:bg-cyan-500"
-          >
-            Login
-          </button>
-        </form>
-        <p className="mt-6 text-center text-sm text-slate-400">
-          Don&apos;t have an account?{" "}
-          <Link to="/signup" className="font-medium text-cyan-300 hover:text-cyan-200">
-            Create one
-          </Link>
-        </p>        
+            <p className="auth-eyebrow">WELCOME BACK</p>
+
+            <h1>Sign in to ResumeAI</h1>
+
+            <p>
+              Continue analyzing your resume and improving your chances of
+              getting shortlisted.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="auth-form">
+
+            <div className="auth-field">
+              <label htmlFor="email">Email address</label>
+
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="auth-field">
+              <div className="auth-label-row">
+                <label htmlFor="password">Password</label>
+              </div>
+
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+              />
+            </div>
+
+            {error && <div className="auth-error">{error}</div>}
+
+            <button type="submit" className="auth-submit">
+              Sign In
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <span>Don't have an account?</span>
+            <Link to="/signup">Create one</Link>
+          </div>
+
+        </div>
       </div>
     </div>
   );

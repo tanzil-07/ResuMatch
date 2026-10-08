@@ -1,369 +1,685 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+const FeatureIcon = ({ type }) => {
+  const icons = {
+    intelligence: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M12 3a6 6 0 0 0-3.5 10.87c.32.23.5.6.5 1v.63h6v-.63c0-.4.18-.77.5-1A6 6 0 0 0 12 3Z" />
+        <path d="M9 19h6M10 22h4M9 15h6" />
+      </svg>
+    ),
+    ats: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <circle cx="12" cy="12" r="9" />
+        <path d="m8 12 2.5 2.5L16.5 9" />
+      </svg>
+    ),
+    improvements: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M12 3v18M3 12h18" />
+        <path d="m7 7 10 10M17 7 7 17" />
+      </svg>
+    ),
+    history: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M3 12a9 9 0 1 0 3-6.7" />
+        <path d="M3 4v5h5" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ),
+  };
+
+  return icons[type];
+};
+
+const ArrowIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M5 12h14" />
+    <path d="m13 6 6 6-6 6" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="m5 12 4 4L19 6" />
+  </svg>
+);
 
 function Home() {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const handleGetStarted = () => {
+    navigate(token ? "/dashboard" : "/signup");
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-white/10 bg-slate-900/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">
-              AI-Powered Resume Review
-            </p>
-            <h1 className="mt-1 text-xl font-semibold text-white sm:text-2xl">
-              AI Resume Analyzer
-            </h1>
+    <div className="home-page">
+      {/* Background effects */}
+      <div className="home-bg-glow home-bg-glow-one"></div>
+      <div className="home-bg-glow home-bg-glow-two"></div>
+      <div className="home-grid"></div>
+
+      {/* Navbar */}
+      <header className="home-navbar">
+        <div className="home-container navbar-inner">
+          <Link to="/" className="brand">
+            <span className="brand-mark">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span>Resume<span className="brand-accent">AI</span></span>
+          </Link>
+
+          <nav className="desktop-nav">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#why-us">Why ResumeAI</a>
+          </nav>
+
+          <div className="navbar-actions">
+            {token ? (
+              <>
+                <Link to="/history" className="nav-history">
+                  History
+                </Link>
+                <Link to="/dashboard" className="nav-dashboard">
+                  Dashboard
+                  <ArrowIcon />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="nav-login">
+                  Log in
+                </Link>
+                <Link to="/signup" className="nav-dashboard">
+                  Get started
+                  <ArrowIcon />
+                </Link>
+              </>
+            )}
           </div>
-
-            <div className="flex gap-3">
-              {!token ? (
-                <>
-                  <Link
-                    to="/demo"
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Try Demo
-                  </Link>
-
-                  <Link
-                    to="/login"
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Login
-                  </Link>
-
-                  <Link
-                    to="/signup"
-                    className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                  >
-                    Dashboard
-                  </Link>
-
-                  <button
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("user");
-                      window.location.href = "/";
-                    }}
-                    className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </div>
         </div>
       </header>
 
+      {/* Hero */}
       <main>
-        <section className="border-b border-white/10">
-          <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-24">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                Resume feedback built for real job applications
+        <section className="hero-section">
+          <div className="home-container hero-container">
+            <div className="hero-content">
+              <div className="hero-badge">
+                <span className="status-dot"></span>
+                AI-powered resume intelligence
+              </div>
+
+              <h1>
+                Your resume.
+                <br />
+                <span className="gradient-text">Smarter.</span>{" "}
+                More job-ready.
+              </h1>
+
+              <p className="hero-description">
+                Analyze your resume with AI, understand your ATS compatibility,
+                compare it against a job description, and get clear actions
+                to improve your chances of getting noticed.
               </p>
 
-              <h2 className="mt-5 max-w-4xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
-                Analyze your resume, improve ATS match, and save tailored reviews in one place.
+              <div className="hero-actions">
+                <button className="primary-button" onClick={handleGetStarted}>
+                  <span>
+                    {token ? "Open analyzer" : "Analyze my resume"}
+                  </span>
+                  <ArrowIcon />
+                </button>
+
+                <Link to="/demo" className="secondary-button">
+                  See how it works
+                </Link>
+              </div>
+
+              <div className="hero-note">
+                <span className="note-check">
+                  <CheckIcon />
+                </span>
+                Built for modern job applications
+              </div>
+            </div>
+
+            {/* AI Preview */}
+            <div className="hero-visual">
+              <div className="visual-orbit orbit-one"></div>
+              <div className="visual-orbit orbit-two"></div>
+
+              <div className="analysis-window">
+                <div className="window-topbar">
+                  <div className="window-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+
+                  <span className="window-title">
+                    Resume analysis
+                  </span>
+
+                  <span className="window-live">
+                    <span></span>
+                    Live
+                  </span>
+                </div>
+
+                <div className="analysis-window-content">
+                  <div className="preview-header">
+                    <div>
+                      <span className="preview-label">
+                        AI RESUME REVIEW
+                      </span>
+                      <h3>Software Engineer Resume</h3>
+                    </div>
+
+                    <div className="preview-file">
+                      PDF
+                    </div>
+                  </div>
+
+                  <div className="preview-score-row">
+                    <div className="preview-score">
+                      <div className="preview-score-ring">
+                        <svg viewBox="0 0 100 100">
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="42"
+                            className="score-ring-bg"
+                          />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="42"
+                            className="score-ring-progress"
+                          />
+                        </svg>
+
+                        <div className="score-value">
+                          <strong>82</strong>
+                          <span>/100</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="score-title">
+                          Resume score
+                        </span>
+                        <span className="score-good">
+                          Strong profile
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="ats-mini-card">
+                      <span>ATS MATCH</span>
+                      <strong>76%</strong>
+                      <div className="mini-progress">
+                        <span></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="preview-divider"></div>
+
+                  <div className="preview-section-title">
+                    Section performance
+                  </div>
+
+                  <div className="preview-bars">
+                    <div className="preview-bar-item">
+                      <div>
+                        <span>Technical Skills</span>
+                        <b>91</b>
+                      </div>
+                      <div className="bar">
+                        <span style={{ width: "91%" }}></span>
+                      </div>
+                    </div>
+
+                    <div className="preview-bar-item">
+                      <div>
+                        <span>Projects</span>
+                        <b>84</b>
+                      </div>
+                      <div className="bar">
+                        <span style={{ width: "84%" }}></span>
+                      </div>
+                    </div>
+
+                    <div className="preview-bar-item">
+                      <div>
+                        <span>Experience</span>
+                        <b>78</b>
+                      </div>
+                      <div className="bar">
+                        <span style={{ width: "78%" }}></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="ai-insight">
+                    <div className="insight-icon">
+                      <FeatureIcon type="intelligence" />
+                    </div>
+
+                    <div>
+                      <span>AI INSIGHT</span>
+                      <p>
+                        Add measurable impact to your project
+                        descriptions.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating cards */}
+              <div className="floating-card floating-match">
+                <div className="floating-icon purple">
+                  <CheckIcon />
+                </div>
+                <div>
+                  <strong>Job Match</strong>
+                  <span>+18% improvement</span>
+                </div>
+              </div>
+
+              <div className="floating-card floating-keyword">
+                <span className="floating-small-label">
+                  MATCHED KEYWORD
+                </span>
+                <strong>Java</strong>
+                <span className="keyword-check">
+                  <CheckIcon />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="home-container hero-stats">
+            <div className="stat-item">
+              <strong>AI-powered</strong>
+              <span>resume analysis</span>
+            </div>
+
+            <div className="stat-separator"></div>
+
+            <div className="stat-item">
+              <strong>ATS-focused</strong>
+              <span>job matching</span>
+            </div>
+
+            <div className="stat-separator"></div>
+
+            <div className="stat-item">
+              <strong>Actionable</strong>
+              <span>improvement insights</span>
+            </div>
+
+            <div className="stat-separator"></div>
+
+            <div className="stat-item">
+              <strong>One workspace</strong>
+              <span>for your applications</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section id="features" className="features-section">
+          <div className="home-container">
+            <div className="section-heading">
+              <span className="section-eyebrow">POWERFUL ANALYSIS</span>
+
+              <h2>
+                Everything you need to make
+                <br />
+                your resume <span>stand out.</span>
               </h2>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
-                AI Resume Analyzer helps students and job seekers review resume
-                quality, compare against job descriptions, identify missing
-                keywords, and keep a history of saved analyses for future
-                improvement.
+              <p>
+                Stop guessing what recruiters and ATS systems want.
+                ResumeAI turns your resume into a clear improvement plan.
               </p>
-
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  to="/demo"
-                  className="rounded-2xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                >
-                  Try Demo
-                </Link>
-
-                {!token ? (
-                  <Link
-                    to="/signup"
-                    className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Create Account
-                  </Link>
-                ) : (
-                  <Link
-                    to="/dashboard"
-                    className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Dashboard
-                  </Link>
-                )}
-              </div>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-2xl font-semibold text-white">AI</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Structured resume feedback powered by intelligent analysis.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-2xl font-semibold text-white">ATS</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Compare against job descriptions and surface missing keywords.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-2xl font-semibold text-white">History</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Save, review, and manage previous analyses in one dashboard.
-                  </p>
-                </div>
-              </div>
             </div>
 
-            <div className="rounded-[32px] border border-white/10 bg-slate-900 p-6 shadow-2xl sm:p-8">
-              <div className="rounded-[28px] border border-white/10 bg-slate-950/70 p-5">
-                <div className="flex items-center justify-between">
+            <div className="features-grid">
+              <div className="feature-card feature-card-large">
+                <div className="feature-icon">
+                  <FeatureIcon type="intelligence" />
+                </div>
+
+                <div className="feature-card-content">
+                  <span className="feature-number">01</span>
+                  <h3>Resume intelligence</h3>
+                  <p>
+                    Get an AI-powered evaluation of your resume's
+                    structure, content, strengths, and weaknesses.
+                  </p>
+                </div>
+
+                <div className="feature-line"></div>
+              </div>
+
+              <div className="feature-card">
+                <div className="feature-icon">
+                  <FeatureIcon type="ats" />
+                </div>
+
+                <span className="feature-number">02</span>
+                <h3>ATS matching</h3>
+                <p>
+                  See how well your resume matches the keywords and
+                  requirements employers are looking for.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <div className="feature-icon">
+                  <FeatureIcon type="improvements" />
+                </div>
+
+                <span className="feature-number">03</span>
+                <h3>Actionable improvements</h3>
+                <p>
+                  Get prioritized recommendations instead of generic
+                  resume advice.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <div className="feature-icon">
+                  <FeatureIcon type="history" />
+                </div>
+
+                <span className="feature-number">04</span>
+                <h3>Saved analysis history</h3>
+                <p>
+                  Keep previous analyses organized so you can track
+                  improvements across applications.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section id="how-it-works" className="how-section">
+          <div className="home-container">
+            <div className="section-heading centered">
+              <span className="section-eyebrow">SIMPLE WORKFLOW</span>
+
+              <h2>
+                From resume to
+                <br />
+                <span>better applications.</span>
+              </h2>
+
+              <p>
+                No complicated setup. Upload, analyze, improve.
+              </p>
+            </div>
+
+            <div className="steps-wrapper">
+              <div className="step-card">
+                <div className="step-number">01</div>
+
+                <div className="step-visual upload-visual">
+                  <div className="upload-document">
+                    <div className="document-top">
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    <div className="document-lines">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    <div className="upload-arrow">
+                      ↑
+                    </div>
+                  </div>
+                </div>
+
+                <h3>Upload your resume</h3>
+                <p>
+                  Add your PDF resume and optionally provide the job
+                  description you're targeting.
+                </p>
+              </div>
+
+              <div className="step-connector">
+                <ArrowIcon />
+              </div>
+
+              <div className="step-card">
+                <div className="step-number">02</div>
+
+                <div className="step-visual ai-visual">
+                  <div className="ai-core">
+                    <div className="ai-core-inner">
+                      AI
+                    </div>
+                  </div>
+
+                  <span className="ai-orbit-dot dot-one"></span>
+                  <span className="ai-orbit-dot dot-two"></span>
+                  <span className="ai-orbit-dot dot-three"></span>
+                </div>
+
+                <h3>Let AI analyze it</h3>
+                <p>
+                  ResumeAI evaluates your content, skills, ATS match,
+                  relevance, and improvement opportunities.
+                </p>
+              </div>
+
+              <div className="step-connector">
+                <ArrowIcon />
+              </div>
+
+              <div className="step-card">
+                <div className="step-number">03</div>
+
+                <div className="step-visual result-visual">
+                  <div className="result-score">
+                    <span>82</span>
+                    <small>/100</small>
+                  </div>
+
+                  <div className="result-lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+
+                  <div className="result-check">
+                    <CheckIcon />
+                  </div>
+                </div>
+
+                <h3>Improve with confidence</h3>
+                <p>
+                  Follow clear recommendations and make your resume
+                  stronger for your next application.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Why us */}
+        <section id="why-us" className="why-section">
+          <div className="home-container why-container">
+            <div className="why-content">
+              <span className="section-eyebrow">
+                BUILT FOR JOB SEEKERS
+              </span>
+
+              <h2>
+                Your resume shouldn't
+                <br />
+                be a <span>black box.</span>
+              </h2>
+
+              <p>
+                Most resume tools give you a score and leave you
+                wondering what to do next. ResumeAI focuses on the
+                details that actually help you improve.
+              </p>
+
+              <div className="why-list">
+                <div className="why-item">
+                  <div className="why-check">
+                    <CheckIcon />
+                  </div>
+
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                      Sample Analysis
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-white">
-                      Software Developer Resume
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3 py-2">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-300">
-                      ATS Match
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-emerald-300">
-                      8/10
-                    </p>
+                    <strong>Understand your score</strong>
+                    <span>
+                      See exactly which resume sections are helping
+                      or hurting your application.
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-cyan-400/20 bg-cyan-500/5 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-cyan-300">
-                      Strengths
-                    </p>
-                    <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
-                      <li>Strong project relevance</li>
-                      <li>Good React and Node.js alignment</li>
-                      <li>Clear technical stack</li>
-                    </ul>
+                <div className="why-item">
+                  <div className="why-check">
+                    <CheckIcon />
                   </div>
 
-                  <div className="rounded-2xl border border-red-400/20 bg-red-500/5 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-red-300">
-                      Missing Keywords
-                    </p>
-                    <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
-                      <li>AWS</li>
-                      <li>CI/CD</li>
-                      <li>Scalability</li>
-                    </ul>
+                  <div>
+                    <strong>Match specific job requirements</strong>
+                    <span>
+                      Compare your skills directly against the role
+                      you're applying for.
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                    Summary
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">
-                    This resume shows solid full-stack fundamentals and relevant
-                    project work, but could improve ATS alignment by including
-                    missing cloud and deployment-related keywords.
-                  </p>
+                <div className="why-item">
+                  <div className="why-check">
+                    <CheckIcon />
+                  </div>
+
+                  <div>
+                    <strong>Know what to fix first</strong>
+                    <span>
+                      Get prioritized improvements so you can focus
+                      on the changes with the biggest impact.
+                    </span>
+                  </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="why-visual">
+              <div className="why-glow"></div>
+
+              <div className="insight-panel">
+                <div className="insight-panel-header">
+                  <div>
+                    <span>AI RECOMMENDATION</span>
+                    <h4>Improve your project section</h4>
+                  </div>
+
+                  <div className="priority-badge">
+                    HIGH
+                  </div>
+                </div>
+
+                <p>
+                  Your projects demonstrate technical knowledge,
+                  but adding measurable results would make them
+                  more impactful.
+                </p>
+
+                <div className="impact-row">
+                  <span>Potential score impact</span>
+                  <strong>+15 pts</strong>
+                </div>
+
+                <div className="impact-bar">
+                  <span></span>
+                </div>
+              </div>
+
+              <div className="mini-insight mini-one">
+                <span>ATS MATCH</span>
+                <strong>76%</strong>
+              </div>
+
+              <div className="mini-insight mini-two">
+                <span>MISSING</span>
+                <strong>8 keywords</strong>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="border-b border-white/10">
-          <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-8">
-            <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                Features
-              </p>
-              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
-                Built like a modern career tool, not a class demo
-              </h3>
-              <p className="mt-4 text-base leading-8 text-slate-400">
-                Designed to simulate a real-world product experience with resume
-                review, ATS matching, user history, labels, and analysis
-                management workflows.
-              </p>
-            </div>
+        {/* Final CTA */}
+        <section className="cta-section">
+          <div className="cta-glow"></div>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-                <p className="text-lg font-semibold text-white">
-                  AI Resume Review
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Receive structured feedback with strengths, weaknesses,
-                  summaries, and actionable suggestions.
-                </p>
-              </div>
+          <div className="home-container cta-container">
+            <span className="section-eyebrow">
+              READY WHEN YOU ARE
+            </span>
 
-              <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-                <p className="text-lg font-semibold text-white">
-                  ATS Keyword Matching
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Compare resumes against job descriptions and identify matched
-                  and missing keywords.
-                </p>
-              </div>
+            <h2>
+              Give your resume
+              <br />
+              the <span>advantage.</span>
+            </h2>
 
-              <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-                <p className="text-lg font-semibold text-white">
-                  Saved Analysis History
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Keep track of previous analyses with custom labels, timestamps,
-                  previews, and history management.
-                </p>
-              </div>
+            <p>
+              Analyze your resume and discover exactly where you can
+              improve before your next application.
+            </p>
 
-              <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-                <p className="text-lg font-semibold text-white">
-                  Explore the demo
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Public demo mode allows quick product exploration without
-                  requiring account setup.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-white/10">
-          <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-8">
-            <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                How it works
-              </p>
-              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
-                Simple flow, practical results
-              </h3>
-            </div>
-
-            <div className="mt-10 grid gap-6 lg:grid-cols-3">
-              <div className="rounded-[28px] border border-white/10 bg-slate-900 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                  Step 1
-                </p>
-                <p className="mt-3 text-xl font-semibold text-white">
-                  Paste or upload your resume
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Provide resume text directly or upload a PDF for parsing and
-                  analysis.
-                </p>
-              </div>
-
-              <div className="rounded-[28px] border border-white/10 bg-slate-900 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                  Step 2
-                </p>
-                <p className="mt-3 text-xl font-semibold text-white">
-                  Add a target job description
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Improve ATS alignment by matching your resume against a real
-                  job posting.
-                </p>
-              </div>
-
-              <div className="rounded-[28px] border border-white/10 bg-slate-900 p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-300">
-                  Step 3
-                </p>
-                <p className="mt-3 text-xl font-semibold text-white">
-                  Review, improve, and save
-                </p>
-                <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Analyze the results, refine your resume, and save important
-                  versions in your account history.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-8">
-            <div className="rounded-[32px] border border-cyan-400/20 bg-cyan-500/5 p-8 text-center sm:p-10">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-                Get started
-              </p>
-              <h3 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
-                Try the product instantly or create your account
-              </h3>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-400">
-                Explore the analyzer in demo mode, or sign up to unlock saved
-                history, labels, and account-based resume management.
-              </p>
-
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Link
-                  to="/demo"
-                  className="rounded-2xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                >
-                  Try Demo
-                </Link>
-
-                {!token ? (
-                  <Link
-                    to="/signup"
-                    className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Create Account
-                  </Link>
-                ) : (
-                  <Link
-                    to="/dashboard"
-                    className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Dashboard
-                  </Link>
-                )}
-              </div>
-            </div>
+            <button className="primary-button cta-button" onClick={handleGetStarted}>
+              <span>
+                {token ? "Open analyzer" : "Get started for free"}
+              </span>
+              <ArrowIcon />
+            </button>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-slate-900/70">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-6 py-8 text-sm text-slate-400 sm:px-8 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="font-medium text-white">AI Resume Analyzer</p>
-            <p className="mt-1">
-              Built as a modern SaaS-style resume and ATS optimization platform.
-            </p>
-          </div>
+      {/* Footer */}
+      <footer className="home-footer">
+        <div className="home-container footer-inner">
+          <Link to="/" className="brand footer-brand">
+            <span className="brand-mark">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <span>Resume<span className="brand-accent">AI</span></span>
+          </Link>
 
-          <div className="text-left md:text-right">
-            <p className="font-medium text-white">Built by Mahir Alam</p>
-            <p className="mt-1">
-              Computer Science Student, University of Calgary
-            </p>
-          </div>
+          <p>
+            AI-powered resume analysis for smarter job applications.
+          </p>
+
+          <span className="footer-copy">
+            © {new Date().getFullYear()} ResumeAI
+          </span>
         </div>
       </footer>
     </div>
