@@ -447,14 +447,14 @@ Again: RETURN ONLY VALID JSON.
      * ---------------------------------------------------------
      */
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-      },
-    });
 
+    const response = await ai.models.generateContent({
+  model: "gemini-3.5-flash-lite",
+  contents: prompt,
+  config: {
+    responseMimeType: "application/json",
+  },
+});
     /*
      * ---------------------------------------------------------
      * 6. Get AI response text
