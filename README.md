@@ -1,135 +1,168 @@
-# 🚀 AI Resume Analyzer
+# ResuMatch – AI Resume Analyzer
 
-AI-powered web application that analyzes resumes and provides ATS-style feedback, keyword matching, and improvement suggestions.
+**ResuMatch** is a full-stack web application that helps job seekers analyze their resumes, identify missing skills and keywords, and improve alignment with a target job description.
 
-🌐 **Live Demo:** https://ai-resume-analyzer-ivory-psi.vercel.app  
-🎥 **Demo Video:** https://www.youtube.com/watch?v=vwf1yrI28TI  
-
----
+The application accepts resume text or a PDF upload and generates structured feedback to help users understand their resume's strengths and areas for improvement.
 
 ## ✨ Features
 
-* Analyze resume (paste text or upload PDF)
-* ATS-style scoring and feedback
-* Keyword match & missing keyword detection
-* AI-generated improvement suggestions
-* User authentication (JWT)
-* Save, view, and delete past analyses
-* Demo mode (no login required)
+- **Resume Analysis:** Analyze resume content and receive structured feedback.
+- **PDF Upload:** Upload a resume in PDF format.
+- **Job Description Matching:** Compare resume content with a target job description.
+- **Resume Scoring:** View an overall resume score and ATS-oriented insights.
+- **Keyword Analysis:** Identify matched keywords and potentially missing skills.
+- **User Authentication:** Sign up and log in securely.
+- **Analysis History:** Save and revisit previous analyses.
+- **Responsive Interface:** Use the application through a modern web interface.
 
----
+## 🛠️ Tech Stack
 
-## 🏗️ Tech Stack
+| Area | Technologies |
+|---|---|
+| Frontend | React, Vite, JavaScript, CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Authentication | JSON Web Tokens (JWT), bcrypt |
+| File Processing | Multer, pdf-parse |
+| AI Analysis | Gemini integration, depending on the configured backend |
 
-* **Frontend:** React (Vite), Tailwind CSS
-* **Backend:** Node.js, Express
-* **Database:** MongoDB Atlas
-* **AI:** OpenAI API
-* **Deployment:** Vercel (frontend), Render (backend)
+## 📂 Project Structure
 
----
-
-## 📸 Screenshots
-
-### 🚀 Landing Experience
-<p align="center">
-  <img src="docs/screenshots/1_landing1.png" width="45%"/>
-  <img src="docs/screenshots/2_landing2.png" width="45%"/>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/3_landing3.png" width="60%"/>
-</p>
-
-### 🧠 Resume Analyzer
-<p align="center">
-  <img src="docs/screenshots/4_analyzer.png" width="70%"/>
-</p>
-
-### 📊 Results & Insights
-<p align="center">
-  <img src="docs/screenshots/5_result.png" width="70%"/>
-</p>
-
-### 📌 Detailed Feedback
-<p align="center">
-  <img src="docs/screenshots/6_details1.png" width="45%"/>
-  <img src="docs/screenshots/7_details2.png" width="45%"/>
-</p>
-
----
-
-## ⚙️ Setup (Local)
-
-```bash
-# Clone repo
-git clone https://github.com/mahir-alam/AI-Resume-Analyzer.git
-cd AI-Resume-Analyzer
+```text
+ResuMatch/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── index.html
+│
+├── server/
+│   ├── controllers/
+│   ├── routes/
+│   ├── models/
+│   ├── middleware/
+│   ├── index.js
+│   └── package.json
+│
+└── README.md
 ```
 
-### Backend
+*Note: The folder listing above describes the intended organization; individual folders may vary in your repository.*
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+Install the following before running the project:
+
+- [Node.js](https://nodejs.org/)
+- npm (included with Node.js)
+- A MongoDB database, such as [MongoDB Atlas](https://www.mongodb.com/atlas)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/tanzil-07/ResuMatch.git
+cd ResuMatch
+```
+
+### 2. Configure the Backend
 
 ```bash
 cd server
 npm install
-npm run dev
 ```
 
-### Frontend
+Create a `.env` file inside the `server` directory and configure the environment variables required by your backend:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_strong_random_secret
+CLIENT_URL=http://localhost:5173
+```
+
+If your backend uses an external AI provider, configure its API key according to the provider and code you have implemented. Never commit API keys or database credentials to GitHub.
+
+### 3. Start the Backend
+
+From the `server` directory, run:
+
+```bash
+npm start
+```
+
+The backend will run on the configured port, typically `5000`.
+
+### 4. Configure the Frontend
+
+Open a second terminal from the project root:
 
 ```bash
 cd client
 npm install
-npm run dev
 ```
 
----
-
-## 🔐 Environment Variables
-
-Create a `.env` file in **server**:
-
-```env
-MONGODB_URI=your_mongodb_connection
-JWT_SECRET=your_secret_key
-OPENAI_API_KEY=your_openai_api_key
-CLIENT_URL=http://localhost:5173
-```
-
-Create a `.env` file in **client**:
+Create a `.env` file inside `client`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 ```
 
----
+Make sure this URL matches the port and API configuration used by your backend.
 
-## 🧠 How It Works
+### 5. Start the Frontend
 
-```text
-React Frontend → Express API → MongoDB + OpenAI API
+From the `client` directory, run:
+
+```bash
+npm run dev
 ```
 
-* Frontend sends resume data
-* Backend processes request
-* OpenAI generates structured feedback
-* Results can be saved to database
+Open the local URL printed by Vite in your terminal, usually `http://localhost:5173`.
+
+## 🔄 How It Works
+
+1. The user pastes resume text or uploads a PDF.
+2. The user optionally enters a job description for comparison.
+3. The frontend sends the input to the backend API.
+4. The backend extracts and processes the resume text.
+5. The analysis logic evaluates the resume and prepares feedback.
+6. The frontend displays the score, keyword insights, and improvement suggestions.
+7. Authenticated users can save analyses and access their history.
+
+## 🎯 Project Objectives
+
+- Simplify the resume-review process for students and job seekers.
+- Help users identify gaps between their resumes and target job requirements.
+- Provide actionable feedback for improving resume content.
+- Demonstrate full-stack development, database integration, authentication, and document processing.
+
+## 🚀 Future Enhancements
+
+- OCR support for scanned resumes.
+- More advanced semantic matching between resumes and job descriptions.
+- Resume formatting and readability checks.
+- Personalized resume improvement suggestions.
+- Comparison against multiple job descriptions.
+- Exportable analysis reports.
+
+## 🔐 Security Notes
+
+- Keep `.env` files and API keys private.
+- Use strong database credentials and authentication secrets.
+- Never commit passwords, tokens, or private connection strings.
+- Resume analysis scores and ATS-oriented feedback are estimates, not guarantees of selection or compatibility with every employer's ATS.
+
+## 👨‍💻 Project Information
+
+**Project Name:** ResuMatch – AI Resume Analyzer  
+**Project Type:** Full-Stack Web Application  
+**Purpose:** Resume analysis and job-description matching
 
 ---
 
-## 📌 Notes
-
-* First request may be slow (Render free tier)
-* Demo mode does not save data
-* Requires OpenAI API key for analysis
-
----
-
-## 👨‍💻 Author
-
-Mahir Alam
-(University of Calgary)
-
----
-
-⭐ Star the repo if you found it useful!
+If you find this project useful, consider giving the repository a ⭐ on GitHub.
